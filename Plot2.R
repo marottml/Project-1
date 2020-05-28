@@ -1,0 +1,17 @@
+setwd("C:/Users/mattm/Desktop/Coursera")
+library(base)
+library(tidyverse)
+library(dplyr)
+library(readr)
+
+electric <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", na.strings = "?")
+electric$Date <- as.Date(electric$Date, format="%d/%m/%Y")
+#electric$Time <- strptime(electric$Time, format = "%H:%M:%S")
+power <- electric[(electric$Date=="2007-02-01") | (electric$Date=="2007-02-02"),] #?
+datetime <- paste(power$Date, power$Time)
+power$timestamp <- as.POSIXct(datetime)
+power$Global_active_power <- (as.numeric(as.character(power$Global_active_power)))
+par(mfrow = C(1, 1))
+plot(power$timestamp, power$Global_active_power, type = 'l', ylab = "Global Active Power (kilowatts)", xlab = "")
+dev.copy(png, file = "plot2.png", width = 480, height = 480)
+dev.off()
